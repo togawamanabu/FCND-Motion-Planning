@@ -11,10 +11,11 @@ from udacidrone.connection import MavlinkConnection
 from udacidrone.messaging import MsgID
 from udacidrone.frame_utils import global_to_local
 
-def collinearity_2D(p1, p2, p3):
+#TODO prune_path
+def collinearity_2D(p1, p2, p3, epsilon = 1e-2):
     collinear = False
     det = p1[0]*(p2[1] - p3[1]) + p2[0]*(p3[1] - p1[1]) + p3[0]*(p1[1] - p2[1])
-    if det == 0 :
+    if np.abs(det) <= epsilon :
         collinear = True
 
     return collinear
@@ -167,12 +168,12 @@ class MotionPlanning(Drone):
         grid, north_offset, east_offset = create_grid(data, TARGET_ALTITUDE, SAFETY_DISTANCE)
         print("North offset = {0}, east offset = {1}".format(north_offset, east_offset))
         # Define starting point on the grid (this is just grid center)
-        grid_start = (-north_offset, -east_offset)
+        #grid_start = (-north_offset, -east_offset)
         # TODO: convert start position to current position rather than map center
         grid_start = (int(local_pos[0]-north_offset), int(local_pos[1]- east_offset))
 
         # Set goal as some arbitrary position on the grid
-        grid_goal = (-north_offset + 10, -east_offset + 10)
+        #grid_goal = (-north_offset + 10, -east_offset + 10)
         # TODO: adapt to set goal as latitude / longitude position and convert
         # picked location from simulator manually controlled lat=37.794752, lon = -122.392150
         goal_pos = global_to_local([-122.400886, 37.795174, self._altitude], self.global_home)
